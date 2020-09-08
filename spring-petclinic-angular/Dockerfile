@@ -1,13 +1,26 @@
-FROM node:12.2.0
+ARG DOCKER_HUB="docker.io"
 
-WORKDIR /app
+FROM $DOCKER_HUB/library/node:12-alpine as build
 
-COPY package.json .
+COPY . /workspace/
 
-RUN npm install 
+ARG NPM_REGISTRY=" https://registry.npmjs.org"
 
-RUN npm install -g @angular/cli@latest
+RUN echo "registry = \"$NPM_REGISTRY\"" > /workspace/.npmrc                              && \
+    cd /workspace/                                                                       && \
+    npm install                                                                          && \
+    npm run build
 
-COPY . /app
+FROM $DOCKER_HUB/library/nginx:1.17.6 as runtime
 
-CMD ng serve --host 0.0.0.0 --port 4200 --disableHostCheck true
+COPY  --from=build /workspace/dist/ /usr/share/nginx/html/
+
+RUN chmod a+rwx /var/cache/nginx /var/run /var/log/nginx                        && \
+    sed -i.bak 's/listen\(.*\)80;/listen 8080;/' /etc/nginx/conf.d/default.conf && \
+    sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
+
+EXPOSE 8080
+
+USER nginx
+
+HEALTHCHECK     CMD     [ "service", "nginx", "status" ]
