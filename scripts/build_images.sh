@@ -22,6 +22,9 @@ output()
     echo "[OUTPUT]:" "$1" 1>&2
 }
 
+output "Building the Petclinic FE"
+cd ./spring-petclinic-angular/; npm install; npm run-script build; cd ..
+
 output "Building spring-petclinic-angular"
 docker build --no-cache -t syed951/petclinic-fe ./spring-petclinic-angular
 
