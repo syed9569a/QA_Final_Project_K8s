@@ -30,7 +30,7 @@ if [[ "$(docker images -q syed951/petclinic-fe:latest 2> /dev/null)" == "" ]]; t
 fi
 
 output "Running maven clean install to rebuild the jar file"
-cd ./spring-petclinic-rest/; mvn clean install
+cd ./spring-petclinic-rest/; mvn clean install; cd ..
 
 output "Building spring-petclinic-rest"
 docker build --no-cache -t syed951/petclinic-be ./spring-petclinic-rest

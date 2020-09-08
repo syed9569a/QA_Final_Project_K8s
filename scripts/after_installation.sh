@@ -23,7 +23,3 @@ output()
 
 output "Removing all dangling images"
 docker system prune -f
-
-if [[ ! "$(docker images -q 2> /dev/null)" == "" ]]; then
-    error "images still exists"
-fi
