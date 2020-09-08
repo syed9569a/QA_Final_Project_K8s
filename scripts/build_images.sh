@@ -23,12 +23,7 @@ output()
 }
 
 output "Building spring-petclinic-angular"
-
-if [[ ! "$(docker images -q syed951/petclinic-fe:latest 2> /dev/null)" == "" ]]; then
-    warning "Image already exists"
-    warning "attempting to rebuild image"
-    docker build --no-cache -t syed951/petclinic-fe ./spring-petclinic-angular
-fi
+docker build --no-cache -t syed951/petclinic-fe ./spring-petclinic-angular
 
 if [[ "$(docker images -q syed951/petclinic-fe:latest 2> /dev/null)" == "" ]]; then
     error "could not rebuild image"
@@ -38,24 +33,14 @@ output "Running maven clean install to rebuild the jar file"
 cd ./spring-petclinic-rest/; mvn clean install
 
 output "Building spring-petclinic-rest"
-
-if [[ ! "$(docker images -q syed951/petclinic-be:latest 2> /dev/null)" == "" ]]; then
-    warning "Image already exists"
-    warning "attempting to rebuild image"
-    docker build --no-cache -t syed951/petclinic-be ./spring-petclinic-rest
-fi
+docker build --no-cache -t syed951/petclinic-be ./spring-petclinic-rest
 
 if [[ "$(docker images -q syed951/petclinic-be:latest 2> /dev/null)" == "" ]]; then
     error "could not rebuild image"
 fi
 
 output "Building nginx image"
-
-if [[ ! "$(docker images -q syed951/nginx:latest 2> /dev/null)" == "" ]]; then
-    warning "Image already exists"
-    warning "attempting to rebuild image"
-    docker build --no-cache -t syed951/nginx ./NGINX
-fi
+docker build --no-cache -t syed951/nginx ./NGINX
 
 if [[ "$(docker images -q syed951/nginx:latest 2> /dev/null)" == "" ]]; then
     error "could not rebuild image"
