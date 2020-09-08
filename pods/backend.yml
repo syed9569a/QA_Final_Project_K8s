@@ -30,7 +30,7 @@ spec:
       hostname: backend
       containers:
       - name: backend
-        image: syed951/petclinic_be
+        image: syed951/petclinic-be
         resources:
           limits:
             cpu: "2"
